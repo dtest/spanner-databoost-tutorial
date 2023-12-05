@@ -63,8 +63,8 @@ def process(snapshot, partition):
 parser = argparse.ArgumentParser(
     description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
 )
-parser.add_argument("-instance_id", help="Your Cloud Spanner instance ID.", required=True)
-parser.add_argument("-database_id", help="Your Cloud Spanner database ID.", required=True)
+parser.add_argument("-instance_id", help="Your Spanner instance ID.", required=True)
+parser.add_argument("-database_id", help="Your Spanner database ID.", required=True)
 
 args = parser.parse_args()
 
