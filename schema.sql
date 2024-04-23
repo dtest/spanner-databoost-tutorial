@@ -1,12 +1,3 @@
-CREATE MODEL LLMModel INPUT(
-  prompt STRING(MAX),
- ) OUTPUT(
-  content STRING(MAX),
- ) REMOTE OPTIONS (
-  endpoint = '//aiplatform.googleapis.com/projects/development-344820/locations/us-central1/publishers/google/models/text-bison@001',
-  default_batch_size = 1
-);
-
 CREATE TABLE interests (
   interestUUID STRING(36) NOT NULL DEFAULT (GENERATE_UUID()),
   interest STRING(MAX),

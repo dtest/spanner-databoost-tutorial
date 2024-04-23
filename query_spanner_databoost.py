@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ def run_batch_query(client):
     """Runs an example batch query."""
     # Create the batch transaction and generate partitions
 
-    query="""SELECT users.userUUID, SHA256(users.email) as hashed_email, COUNT(*) num_topics,
-                    (SELECT MAX(created) FROM topics WHERE userUUID=users.userUUID) as last_posted
-            FROM users
-            INNER JOIN topics USING(userUUID)
-            GROUP BY users.userUUID, users.email"""
+    query="""SELECT users.userUUID, SHA256(users.email) as hashed_email, COUNT(*) num_topics, m.last_posted from
+users
+HASH JOIN (select MAX(t.created) last_posted, t.userUUID FROM topics t GROUP BY 2) m USING (userUUID)
+HASH JOIN topics USING (userUUID)
+GROUP BY users.userUUID, users.email, m.last_posted"""
 
     snapshot = client.batch_snapshot()
     partitions = snapshot.generate_query_batches(
@@ -55,7 +55,7 @@ def process(snapshot, partition):
     print("Started processing partition.")
     row_ct = 0
     for row in snapshot.process_query_batch(partition):
-        print("UserUUID: {}, Hashed Email: {}, Num Topics: {}, Last Posted: {}".format(*row))
+        # print("UserUUID: {}, Hashed Email: {}, Num Topics: {}, Last Posted: {}".format(*row))
         row_ct += 1
     return time.time(), row_ct
 
